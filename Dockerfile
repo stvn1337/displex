@@ -20,9 +20,10 @@ RUN groupadd -g 1001 displex \
         && useradd -u 1001 -g 1001 displex \
         && mkdir /data \
         && chown -R displex:displex /data
-
+        
 FROM scratch AS runtime
 COPY --from=user-creator /etc/passwd /etc/passwd
+COPY --from=user-creator /etc/group /etc/group
 COPY --from=user-creator --chown=displex:displex /data /data
 
 VOLUME [ "/data" ]
