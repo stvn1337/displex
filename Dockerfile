@@ -71,23 +71,6 @@ RUN groupadd -g 1001 displex \
         && useradd -u 1001 -g 1001 displex \
         && mkdir /data \
         && chown -R displex:displex /data
-        
-FROM scratch AS runtime
-COPY --from=user-creator /etc/passwd /etc/passwd
-COPY --from=user-creator /etc/group /etc/group
-COPY --from=user-creator --chown=displex:displex /data /data
-
-VOLUME [ "/data" ]
-WORKDIR /data
-
-USER displex
-ENV RUST_LOG="displex=info,sea_orm=info" \
-    DISPLEX_HTTP__HOST=0.0.0.0 \
-    DISPLEX_HTTP__PORT=8080 \
-    DATABASE_URL=sqlite://displex.db?mode=rwc
-COPY --from=app-builder --chown=displex:displex /app/target/x86_64-unknown-linux-musl/dist/displex /app
-
-ENTRYPOINT ["/app"]
 RUN echo DISPLEX_HOSTNAME=$DISPLEX_HOSTNAME >> .env && \
     echo DISPLEX_APPLICATION_NAME=$DISPLEX_APPLICATION_NAME >> .env && \
     echo DISPLEX_PLEX_SERVER_ID=$DISPLEX_PLEX_SERVER_ID >> .env && \
@@ -112,4 +95,23 @@ RUN echo DISPLEX_HOSTNAME=$DISPLEX_HOSTNAME >> .env && \
     echo DISPLEX_DISCORD_BOT_LIB_MOVIES_NAME=$DISPLEX_DISCORD_BOT_LIB_MOVIES_NAME >> .env && \
     echo DISPLEX_DISCORD_BOT_LIB_TV_SHOWS_NAME=$DISPLEX_DISCORD_BOT_LIB_TV_SHOWS_NAME >> .env && \
     echo DISPLEX_DISCORD_BOT_LIB_TV_EPISODES_NAME=$DISPLEX_DISCORD_BOT_LIB_TV_EPISODES_NAME >> .env
+        
+FROM scratch AS runtime
+COPY --from=user-creator /etc/passwd /etc/passwd
+COPY --from=user-creator /etc/group /etc/group
+COPY --from=user-creator --chown=displex:displex /data /data
+COPY --from=user-creator --chown=displex:displex .env .env
+
+VOLUME [ "/data" ]
+WORKDIR /data
+
+USER displex
+ENV RUST_LOG="displex=info,sea_orm=info" \
+    DISPLEX_HTTP__HOST=0.0.0.0 \
+    DISPLEX_HTTP__PORT=8080 \
+    DATABASE_URL=sqlite://displex.db?mode=rwc
+COPY --from=app-builder --chown=displex:displex /app/target/x86_64-unknown-linux-musl/dist/displex /app
+
+ENTRYPOINT ["/app"]
+
 
