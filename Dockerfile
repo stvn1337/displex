@@ -101,7 +101,7 @@ FROM scratch AS runtime
 COPY --from=user-creator /etc/passwd /etc/passwd
 COPY --from=user-creator /etc/group /etc/group
 COPY --from=user-creator --chown=displex:displex /data /data
-COPY --from=user-creator --chown=displex:displex .env .env
+COPY --from=user-creator --chown=displex:displex .env /app/.env
 
 VOLUME [ "/data" ]
 WORKDIR /data
