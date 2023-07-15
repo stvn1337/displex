@@ -3,6 +3,7 @@ RUN apt-get update && apt-get install -y musl-tools musl-dev
 RUN update-ca-certificates
 WORKDIR /app
 
+
 ARG DISPLEX_HOSTNAME
 ARG DISPLEX_APPLICATION_NAME
 ARG DISPLEX_PLEX_SERVER_ID
