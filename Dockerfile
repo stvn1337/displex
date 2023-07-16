@@ -72,36 +72,12 @@ RUN groupadd -g 1001 displex \
         && useradd -u 1001 -g 1001 displex \
         && mkdir /data \
         && chown -R displex:displex /data
-RUN echo DISPLEX_HOSTNAME=$DISPLEX_HOSTNAME >> .env && \
-    echo DISPLEX_APPLICATION_NAME=$DISPLEX_APPLICATION_NAME >> .env && \
-    echo DISPLEX_PLEX_SERVER_ID=$DISPLEX_PLEX_SERVER_ID >> .env && \
-    echo DISPLEX_DISCORD_CLIENT_ID=$DISPLEX_DISCORD_CLIENT_ID >> .env && \
-    echo DISPLEX_DISCORD_CLIENT_SECRET=$DISPLEX_DISCORD_CLIENT_SECRET >> .env && \
-    echo DISPLEX_DISCORD_BOT_TOKEN=$DISPLEX_DISCORD_BOT_TOKEN >> .env && \
-    echo DISPLEX_DISCORD_SERVER_ID=$DISPLEX_DISCORD_SERVER_ID >> .env && \
-    echo DISPLEX_DISCORD_CHANNEL_ID=$DISPLEX_DISCORD_CHANNEL_ID >> .env && \
-    echo DISPLEX_SESSION_SECRET_KEY=$DISPLEX_SESSION_SECRET_KEY >> .env && \
-    echo DISPLEX_TAUTULLI_API_KEY=$DISPLEX_TAUTULLI_API_KEY >> .env && \
-    echo DISPLEX_TAUTULLI_URL=$DISPLEX_TAUTULLI_URL >> .env && \
-    echo DISPLEX_ACCEPT_INVALID_CERTS=$DISPLEX_ACCEPT_INVALID_CERTS >> .env && \
-    echo DISPLEX_DATABASE_URL=$DISPLEX_DATABASE_URL >> .env && \
-    echo DATABASE_URL=$DATABASE_URL >> .env && \
-    echo RUST_LOG=$RUST_LOG >> .env && \
-    echo DISPLEX_DISCORD_BOT_STAT_CATEGORY_NAME=$DISPLEX_DISCORD_BOT_STAT_CATEGORY_NAME >> .env && \
-    echo DISPLEX_DISCORD_BOT_STAT_STATUS_NAME=$DISPLEX_DISCORD_BOT_STAT_STATUS_NAME >> .env && \
-    echo DISPLEX_DISCORD_BOT_STAT_STREAM_NAME=$DISPLEX_DISCORD_BOT_STAT_STREAM_NAME >> .env && \
-    echo DISPLEX_DISCORD_BOT_STAT_TRANSCODE_NAME=$DISPLEX_DISCORD_BOT_STAT_TRANSCODE_NAME >> .env && \
-    echo DISPLEX_DISCORD_BOT_STAT_BANDWIDTH_NAME=$DISPLEX_DISCORD_BOT_STAT_BANDWIDTH_NAME >> .env && \
-    echo DISPLEX_DISCORD_BOT_LIB_CATEGORY_NAME=$DISPLEX_DISCORD_BOT_LIB_CATEGORY_NAME >> .env && \
-    echo DISPLEX_DISCORD_BOT_LIB_MOVIES_NAME=$DISPLEX_DISCORD_BOT_LIB_MOVIES_NAME >> .env && \
-    echo DISPLEX_DISCORD_BOT_LIB_TV_SHOWS_NAME=$DISPLEX_DISCORD_BOT_LIB_TV_SHOWS_NAME >> .env && \
-    echo DISPLEX_DISCORD_BOT_LIB_TV_EPISODES_NAME=$DISPLEX_DISCORD_BOT_LIB_TV_EPISODES_NAME >> .env
         
 FROM scratch AS runtime
 COPY --from=user-creator /etc/passwd /etc/passwd
 COPY --from=user-creator /etc/group /etc/group
 COPY --from=user-creator --chown=displex:displex /data /data
-COPY --from=user-creator --chown=displex:displex .env /app/.env
+#COPY --from=user-creator --chown=displex:displex .env /app/.env
 
 VOLUME [ "/data" ]
 WORKDIR /data
